@@ -1,8 +1,7 @@
-print("===================================")
-print(" Welcome to AI BA Workspace 🚀")
-print("===================================")
+from services.document_reader import read_word_document
 
-name = input("What is your name? ")
+print("Advisor AI Studio")
 
-print(f"Welcome {name}!")
-print("Let's build AI together.")   
+text = read_word_document("data/documents/sample.docx")
+
+print(text)
