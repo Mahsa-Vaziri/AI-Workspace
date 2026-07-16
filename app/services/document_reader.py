@@ -1,16 +1,38 @@
+from pathlib import Path
+
 from docx import Document
 
 
-def read_word_document(file_path):
+def read_word_document(file_path: str | Path) -> str:
     """
-    Reads a Word document and returns its text.
+    Read a Microsoft Word document and return its non-empty paragraphs
+    as one text string.
+
+    Args:
+        file_path: Path to a .docx file.
+
+    Returns:
+        Extracted document text.
+
+    Raises:
+        FileNotFoundError: If the document does not exist.
+        ValueError: If the selected file is not a .docx document.
     """
 
-    doc = Document(file_path)
+    path = Path(file_path)
 
-    text = []
+    if not path.exists():
+        raise FileNotFoundError(f"Document not found: {path}")
 
-    for paragraph in doc.paragraphs:
-        text.append(paragraph.text)
+    if path.suffix.lower() != ".docx":
+        raise ValueError("Only .docx files are currently supported.")
 
-    return "\n".join(text)
+    document = Document(path)
+
+    paragraphs = [
+        paragraph.text.strip()
+        for paragraph in document.paragraphs
+        if paragraph.text.strip()
+    ]
+
+    return "\n".join(paragraphs)
