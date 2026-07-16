@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from app.services.document_reader import read_word_document
+from app.ai.client import AIClient
+from app.ai.provider import AIProvider
 
 
 def main() -> None:
@@ -17,6 +19,13 @@ def main() -> None:
 
         print("\nDocument extracted successfully:\n")
         print(document_text)
+
+        client = AIClient(AIProvider.OPENAI)
+
+        response = client.ask(document_text)
+
+        print("\nAI Response:\n")
+        print(response)
 
     except (FileNotFoundError, ValueError) as error:
         print(f"\nError: {error}")

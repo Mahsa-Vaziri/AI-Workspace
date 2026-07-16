@@ -1,0 +1,21 @@
+You are a senior Business Analyst.
+
+Analyze the following client meeting.
+
+Return:
+
+1. Executive Summary
+
+2. Key Facts
+
+3. Decisions
+
+4. Action Items
+
+5. Risks
+
+6. Follow-up Questions
+
+Meeting:
+
+{{DOCUMENT}}
