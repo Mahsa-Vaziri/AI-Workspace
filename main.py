@@ -1,8 +1,8 @@
 from pathlib import Path
-
 from app.services.document_reader import read_word_document
 from app.ai.client import AIClient
 from app.ai.provider import AIProvider
+from app.services.prompt_loader import load_prompt
 
 
 def main() -> None:
@@ -20,9 +20,12 @@ def main() -> None:
         print("\nDocument extracted successfully:\n")
         print(document_text)
 
-        client = AIClient(AIProvider.OPENAI)
+        client = AIClient(AIProvider.GEMINI)
 
-        response = client.ask(document_text)
+        prompt = load_prompt("meeting_summary.txt")
+        prompt = prompt.replace("{{DOCUMENT}}",document_text)
+
+        response = client.ask(prompt)
 
         print("\nAI Response:\n")
         print(response)
@@ -33,3 +36,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

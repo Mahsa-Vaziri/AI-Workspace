@@ -1,17 +1,34 @@
+from google import genai
+
+from app.ai.config import GEMINI_API_KEY, GEMINI_MODEL
 from app.ai.provider import AIProvider
 
 
 class AIClient:
+    """Send prompts to the selected AI provider."""
 
-    def __init__(self, provider: AIProvider):
+    def __init__(self, provider: AIProvider) -> None:
         self.provider = provider
 
-    def ask(self, prompt: str):
+        if self.provider == AIProvider.GEMINI:
+            self.client = genai.Client(api_key=GEMINI_API_KEY)
+        else:
+            raise ValueError(
+                f"Unsupported AI provider: {self.provider.value}"
+            )
 
-        print("=" * 40)
-        print("AI Provider:", self.provider.value)
-        print("=" * 40)
+    def ask(self, prompt: str) -> str:
+        """Send a prompt to the AI provider and return the response text."""
 
-        print(prompt)
+        if not prompt.strip():
+            raise ValueError("The prompt cannot be empty.")
 
-        return "Fake AI Response"
+        response = self.client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt,
+        )
+
+        if not response.text:
+            raise RuntimeError("Gemini returned an empty response.")
+
+        return response.text
