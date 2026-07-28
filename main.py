@@ -1,10 +1,10 @@
 from pathlib import Path
-
 from app.ai.client import AIClient
 from app.ai.provider import AIProvider
 from app.services.document_reader import read_word_document
 from app.services.output_writer import save_markdown
 from app.services.prompt_loader import load_prompt
+from app.services.word_writer import save_word_document
 
 
 def main() -> None:
@@ -41,8 +41,15 @@ def main() -> None:
             "meeting_summary.md",
             response,
         )
-
         print(f"\nReport saved to: {output_file}")
+
+        word_file = save_word_document(
+        "meeting_summary.docx",
+        response,
+        )
+
+        print(f"Word report saved to: {word_file}")
+
 
     except Exception as error:
         print(f"\nError: {type(error).__name__}: {error}")
