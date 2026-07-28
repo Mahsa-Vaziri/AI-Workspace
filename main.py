@@ -1,12 +1,14 @@
 from pathlib import Path
-from app.services.document_reader import read_word_document
+
 from app.ai.client import AIClient
 from app.ai.provider import AIProvider
+from app.services.document_reader import read_word_document
+from app.services.output_writer import save_markdown
 from app.services.prompt_loader import load_prompt
 
 
 def main() -> None:
-    """Run the first version of Advisor AI Studio."""
+    """Run Advisor AI Studio."""
 
     document_path = Path("data/documents/sample.docx")
 
@@ -23,17 +25,28 @@ def main() -> None:
         client = AIClient(AIProvider.GEMINI)
 
         prompt = load_prompt("meeting_summary.txt")
-        prompt = prompt.replace("{{DOCUMENT}}",document_text)
+        prompt = prompt.replace(
+            "{{DOCUMENT}}",
+            document_text,
+        )
+
+        print("\nSending document to Gemini...")
 
         response = client.ask(prompt)
 
         print("\nAI Response:\n")
         print(response)
 
-    except (FileNotFoundError, ValueError) as error:
-        print(f"\nError: {error}")
+        output_file = save_markdown(
+            "meeting_summary.md",
+            response,
+        )
+
+        print(f"\nReport saved to: {output_file}")
+
+    except Exception as error:
+        print(f"\nError: {type(error).__name__}: {error}")
 
 
 if __name__ == "__main__":
     main()
-
